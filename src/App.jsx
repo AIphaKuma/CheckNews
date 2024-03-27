@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import MistralClient from "@mistralai/mistralai";
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const doChatStream = async function() {
+
+        const apiKey = document.getElementById("apiKey").value;
+        const chat = document.getElementById("chat").value;
+
+        const client = new MistralClient(apiKey);
+
+        document.getElementById("output").innerHTML = "";
+        document.getElementById("error").innerHTML = "";
+
+        try {
+            const chatStreamResponse = await client.chatStream({
+                model: 'open-mistral-7b',
+                messages: [{role: 'user', content: chat}],
+            });
+
+            for await (const chunk of chatStreamResponse) {
+                if (chunk.choices[0].delta.content !== undefined) {
+                    let streamText = chunk.choices[0].delta.content;
+                    streamText = streamText.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                    document.getElementById("output").innerHTML += streamText;
+                }
+            }
+        }
+        catch (e) {
+            document.getElementById("error").innerHTML += e;
+        }
+    };
+
+    return (
+        <div className="App">
+            <section className="section">
+                <div className="container">
+                    <h1 className="title has-text-centered">Web Stream Example</h1>
+                    <div className="field">
+                        <label className="label" htmlFor="apiKey">API Key</label>
+                        <div className="control">
+                            <input className="input" type="text" id="apiKey" name="apiKey" placeholder="API Key"/>
+                        </div>
+                    </div>
+                    <div id="output" className="message is-info"></div>
+
+                    <div className="field">
+                        <label className="label" htmlFor="question">Question</label>
+                        <div className="control">
+                            <input className="input" type="text" id="chat" name="question" placeholder="Enter your question"/>
+                        </div>
+                    </div>
+                    <div className="field">
+                        <div className="control">
+                            <button className="button is-primary" onClick={doChatStream}>Submit</button>
+                        </div>
+                    </div>
+
+                    <div id="error" className="message is-danger"></div>
+                </div>
+            </section>
+        </div>
+    );
 }
 
-export default App
+export default App;
