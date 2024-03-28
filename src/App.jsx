@@ -32,7 +32,7 @@ function App() {
     <div className="App">
       <section className="section">
         <div className="container">
-          <h1 className="text-3xl font-bold underline text-red-600">
+          <h1 className="text-3xl font-bold underline text-ivory">
             Hello world!
           </h1>
           <h1 className="title has-text-centered">Web Stream Example</h1>
