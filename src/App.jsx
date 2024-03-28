@@ -2,9 +2,9 @@ import MistralClient from "@mistralai/mistralai";
 
 function App() {
   const doChatStream = async function () {
+    const apiKey = process.env.MISTRAL_API_KEY;
     const client = new MistralClient(apiKey);
 
-    const apiKey = process.env.MISTRAL_API_KEY;
     const instruction =
       "Act as a Fake news detector, and you have to justify your answer by quote source";
     const chatValue = document.getElementById("chat").value;
