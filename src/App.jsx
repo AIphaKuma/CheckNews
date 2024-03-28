@@ -4,8 +4,10 @@ function App() {
 
     const doChatStream = async function() {
 
-        const apiKey = document.getElementById("apiKey").value;
-        const chat = document.getElementById("chat").value;
+        const apiKey = process.env.MISTRAL_API_KEY;
+        const instruction = "Act as a Fake news detector, and you have to justify your answer by quote source"
+        const chatValue = document.getElementById("chat").value;
+        const chat = `${instruction}${chatValue}`
 
         const client = new MistralClient(apiKey);
 
@@ -36,12 +38,6 @@ function App() {
             <section className="section">
                 <div className="container">
                     <h1 className="title has-text-centered">Web Stream Example</h1>
-                    <div className="field">
-                        <label className="label" htmlFor="apiKey">API Key</label>
-                        <div className="control">
-                            <input className="input" type="text" id="apiKey" name="apiKey" placeholder="API Key"/>
-                        </div>
-                    </div>
                     <div id="output" className="message is-info"></div>
 
                     <div className="field">
