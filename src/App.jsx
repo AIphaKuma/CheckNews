@@ -58,7 +58,7 @@ function App() {
         />
       </div>
       <div className="md:ml-4 mt-4 md:mt-0">
-        <button className="button bg-steel px-4 py-2 text-white rounded-md" onClick={doChatStream}>
+        <button className=" bg-steels px-4 py-2 text-white rounded-md" onClick={doChatStream}>
           Vérifier
         </button>
       </div>
