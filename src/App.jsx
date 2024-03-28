@@ -8,14 +8,23 @@ function App() {
     const client = new MistralClient(apiKey);
 
     const instruction =
-      "Act as a Fake news detector, and you have to justify your answer by quote source";
+        "Your task is to act as a sophisticated Fake News Detector. Carefully analyze the following statement and determine its veracity." +
+        "You must base your judgment on reliable sources and provide a clear justification for your conclusion. " +
+        "It's imperative that you cite these sources to back up your assessment. " +
+        "Remember, your goal is to evaluate the truthfulness of the information presented, considering the context and available evidence. " +
+        "Additionally, adapt your response to match the language in which the question was asked, ensuring clarity and appropriateness in communication. " +
+        "Your response should be concise yet comprehensive, offering a well-reasoned explanation on the authenticity of the statement.";
     const chatValue = document.getElementById("chat").value;
     const chat = `${instruction}${chatValue}`;
 
     try {
       const chatStreamResponse = await client.chatStream({
-        model: "open-mistral-7b",
-        messages: [{ role: "user", content: chat }],
+        model: 'open-mistral-7b',
+        messages: [{role: 'user', content: chat}],
+        temperature: 0.7, // Ajuste la créativité de la réponse
+        top_p: 0.9, // Contrôle la diversité de la réponse en filtrant les tokens les moins probables
+        presence_penalty: 0.6, // Encourage des réponses nouvelles et uniques
+        frequency_penalty: 0.5, // Réduit la répétition dans la réponse
       });
 
       for await (const chunk of chatStreamResponse) {
